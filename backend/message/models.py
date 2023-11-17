@@ -1,6 +1,6 @@
 from django.db import models
 
-from kitty.models import User
+from django.contrib.auth.models import User
 
 
 class Chat(models.Model):
@@ -8,16 +8,17 @@ class Chat(models.Model):
         User,
         verbose_name='Отправитель',
         related_name='chats_sent',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
     )
     to_user = models.ForeignKey(
         User,
         verbose_name='Получатель',
         related_name='chats_received',
-        on_delete=models.CASCADE
+        on_delete=models.SET_NULL,
+        null=True,
     )
 
-    pass
 
 class Message(models.Model):
     text = models.TextField(
@@ -26,7 +27,8 @@ class Message(models.Model):
     sender = models.ForeignKey(
         User,
         verbose_name='Отправитель',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
     )
     pub_date = models.DateTimeField(
         'Дата сообщения', auto_now_add=True, db_index=True
@@ -38,7 +40,7 @@ class Message(models.Model):
     )
 
     class Meta:
-        ordering=['pub_date']
- 
+        ordering = ['pub_date']
+
     def __str__(self):
         return self.text

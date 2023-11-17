@@ -1,4 +1,5 @@
 from kitty.views import KittyViewSet
+from message import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -12,8 +13,11 @@ router.register(r'cats', KittyViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('api/', include('djoser.urls')),  # Работа с пользователями
-    path('api/', include('djoser.urls.jwt')),  # Работа с токенами
+    path('api/conversations/start/', views.start_convo, name='start_convo'),
+    path('api/conversations/<int:convo_id>/', views.get_conversation, name='get_conversation'),
+    path('conversations/', views.conversations, name='conversations'),
+    path('api/', include('djoser.urls')),
+    path('api/', include('djoser.urls.jwt')), 
 ]
 
 if settings.DEBUG:

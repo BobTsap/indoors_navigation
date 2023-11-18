@@ -33,7 +33,6 @@ urlpatterns = [
     path('conversations/', views.conversations, name='conversations'),
     path('api/', include('djoser.urls')),
     path('api/', include('djoser.urls.jwt')), 
-    # re_path(r'^swagger(?P\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

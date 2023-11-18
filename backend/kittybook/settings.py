@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'djoser',
     'kitty.apps.KittyConfig',
     'message.apps.MessageConfig',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

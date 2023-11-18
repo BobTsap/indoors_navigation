@@ -8,7 +8,7 @@ SECRET_KEY = 'django-insecure-650-a2awhotoe3q)b_g1x5^n9dj1(s1eo^ur=6-m%i0862pi60
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', ]
 
 
 # Application definition
@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework.authtoken',
     'rest_framework',
+    'corsheaders',
     'djoser',
     'kitty.apps.KittyConfig',
     'message.apps.MessageConfig',
@@ -31,6 +32,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -57,6 +59,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'kittybook.wsgi.application'
+
+
+CORS_URLS_REGEX = r'^/api/.*$' 
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+] 
 
 
 # Database

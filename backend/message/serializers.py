@@ -10,15 +10,21 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class ChatListSerializer(serializers.ModelSerializer):
-    last_message = serializers.SerializerMethodField()
+    # last_message = serializers.SerializerMethodField()
 
     class Meta:
         model = Chat
-        fields = ['from_user', 'to_user', 'last_message']
+        fields = ['id','from_user', 'to_user']
 
-    def get_last_message(self, instance):
-        message = instance.message_set.first()
-        return MessageSerializer(instance=message).data
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['from_user'] = instance.from_user.username
+        representation['to_user'] = instance.to_user.username
+        return representation
+
+    # def get_last_message(self, instance):
+    #     message = instance.message_set.first()
+    #     return MessageSerializer(instance=message).data
 
 
 class ChatSerializer(serializers.ModelSerializer):
@@ -27,4 +33,4 @@ class ChatSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Chat
-        fields = ['from_user', 'to_user', 'message_set']
+        fields = ['to_user', 'message_set']

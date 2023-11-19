@@ -18,7 +18,7 @@ class ChatListSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['from_user'] = instance.from_user.username
+        # representation['from_user'] = instance.from_user.username
         representation['to_user'] = instance.to_user.username
         return representation
 

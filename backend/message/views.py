@@ -14,6 +14,7 @@ def start_convo(request, ):
     username = data.pop('username')
     try:
         participant = User.objects.get(username=username)
+        print(participant)
     except User.DoesNotExist:
         return Response({'message': 'You cannot chat with a non existent user'})
 
@@ -22,7 +23,7 @@ def start_convo(request, ):
     if conversation.exists():
         return redirect(reverse('get_conversation', args=(conversation[0].id,)))
     else:
-        conversation = Chat.objects.create(inifrom_usertiator=request.user, to_user=participant)
+        conversation = Chat.objects.create(from_user=request.user, to_user=participant)
         return Response(ChatSerializer(instance=conversation).data)
 
 

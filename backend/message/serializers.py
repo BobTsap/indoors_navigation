@@ -18,7 +18,7 @@ class ChatListSerializer(serializers.ModelSerializer):
 
     def get_last_message(self, instance):
         message = instance.message_set.first()
-        return MessageSerializer(instance=message)
+        return MessageSerializer(instance=message).data
 
 
 class ChatSerializer(serializers.ModelSerializer):

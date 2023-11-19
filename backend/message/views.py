@@ -16,14 +16,21 @@ def start_convo(request, ):
         participant = User.objects.get(username=username)
         print(participant)
     except User.DoesNotExist:
-        return Response({'message': 'You cannot chat with a non existent user'})
+        return Response(
+            {'message': 'You cannot chat with a non existent user'}
+        )
 
-    conversation = Chat.objects.filter(Q(from_user=request.user, to_user=participant) |
-                                               Q(from_user=participant, to_user=request.user))
+    conversation = Chat.objects.filter(
+        Q(from_user=request.user, to_user=participant) |
+        Q(from_user=participant, to_user=request.user)
+    )
     if conversation.exists():
-        return redirect(reverse('get_conversation', args=(conversation[0].id,)))
+        return redirect(
+            reverse('get_conversation', args=(conversation[0].id,))
+        )
     else:
-        conversation = Chat.objects.create(from_user=request.user, to_user=participant)
+        conversation = Chat.objects.create(
+            from_user=request.user, to_user=participant)
         return Response(ChatSerializer(instance=conversation).data)
 
 
@@ -40,6 +47,6 @@ def get_conversation(request, convo_id):
 @api_view(['GET'])
 def conversations(request):
     conversation_list = Chat.objects.filter(Q(from_user=request.user) |
-                                                    Q(to_user=request.user))
+                                            Q(to_user=request.user))
     serializer = ChatListSerializer(instance=conversation_list, many=True)
     return Response(serializer.data)

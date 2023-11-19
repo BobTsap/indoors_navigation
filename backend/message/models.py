@@ -19,6 +19,9 @@ class Chat(models.Model):
         null=True,
     )
 
+    class Meta:
+        unique_together = ['from_user', 'to_user']
+
 
 class Message(models.Model):
     text = models.TextField(

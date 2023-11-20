@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from message.models import Chat
+from message.models import Chat, Message
+from rest_framework.generics import ListAPIView
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -62,5 +63,9 @@ class CreateMessageView(APIView):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
     
-    
-    
+class ChatMessagesView(ListAPIView):
+    serializer_class = MessageSerializer
+
+    def get_queryset(self):
+        chat_id = self.kwargs['chat_id']
+        return Message.objects.filter(chat_room_id=chat_id)

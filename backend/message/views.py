@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from message.models import Chat
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from .serializers import ChatListSerializer, ChatSerializer
+from .serializers import ChatListSerializer, ChatSerializer, MessageSerializer
 from django.db.models import Q
 from django.shortcuts import redirect, reverse
 
@@ -50,3 +51,16 @@ def conversations(request):
                                             Q(to_user=request.user))
     serializer = ChatListSerializer(instance=conversation_list, many=True)
     return Response(serializer.data)
+
+
+
+class CreateMessageView(APIView):
+    def post(self, request):
+        serializer = MessageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+    
+    
+    

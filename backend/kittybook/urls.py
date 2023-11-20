@@ -31,6 +31,7 @@ urlpatterns = [
     path('api/conversations/start/', views.start_convo, name='start_convo'),
     path('api/conversations/<int:convo_id>/', views.get_conversation, name='get_conversation'),
     path('api/conversations/', views.conversations, name='conversations'),
+    path('api/messages/create/', views.CreateMessageView.as_view(), name='create_message'),
     path('api/', include('djoser.urls')),
     path('api/', include('djoser.urls.jwt')), 
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

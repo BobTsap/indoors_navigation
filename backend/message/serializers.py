@@ -1,9 +1,16 @@
+from better_profanity import profanity
+
 from rest_framework import serializers
 
 from message.models import Chat, Message
 
 
 class MessageSerializer(serializers.ModelSerializer):
+
+    def validate_text(self, value):
+        value = profanity.censor(value)
+        return value
+    
     class Meta:
         model = Message
         fields = '__all__'

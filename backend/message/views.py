@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from message.models import Chat, Message
 from rest_framework.generics import ListAPIView
 from rest_framework.decorators import api_view
@@ -19,9 +19,8 @@ def start_convo(request, ):
         print(participant)
     except User.DoesNotExist:
         return Response(
-            {'message': 'You cannot chat with a non existent user'}
+            {'message': 'Пользователя с таким именем не существует'}
         )
-
     conversation = Chat.objects.filter(
         Q(from_user=request.user, to_user=participant) |
         Q(from_user=participant, to_user=request.user)
@@ -38,21 +37,22 @@ def start_convo(request, ):
 
 @api_view(['GET'])
 def get_conversation(request, convo_id):
-    conversation = Chat.objects.filter(id=convo_id)
-    if not conversation.exists():
-        return Response({'message': 'Chat does not exist'})
-    else:
-        serializer = ChatSerializer(instance=conversation[0])
-        return Response(serializer.data)
+    conversation = get_object_or_404(Chat, id=convo_id)
+    if (
+        request.user != conversation.from_user 
+        and request.user != conversation.to_user
+        ):
+        return Response({'message': 'У вас нет доступа к этому чату.'})
+    serializer = ChatSerializer(instance=conversation)
+    return Response(serializer.data)
 
 
 @api_view(['GET'])
 def conversations(request):
-    conversation_list = Chat.objects.filter(Q(from_user=request.user) |
+    conversation_list = get_object_or_404(Chat, Q(from_user=request.user) |
                                             Q(to_user=request.user))
     serializer = ChatListSerializer(instance=conversation_list, many=True)
     return Response(serializer.data)
-
 
 
 class CreateMessageView(APIView):
@@ -62,10 +62,11 @@ class CreateMessageView(APIView):
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
-    
+
+
 class ChatMessagesView(ListAPIView):
     serializer_class = MessageSerializer
 
     def get_queryset(self):
         chat_id = self.kwargs['chat_id']
-        return Message.objects.filter(chat_room_id=chat_id)
+        return get_object_or_404(Message, chat_room_id=chat_id)

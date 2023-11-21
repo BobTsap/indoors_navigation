@@ -1,3 +1,5 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -5,12 +7,20 @@ User = get_user_model()
 
 
 class Kitty(models.Model):
+    '''A class that collect information about cats.'''
+    
     name = models.CharField(
         max_length=100,
         verbose_name='Имя котика',
     )
     birth_year = models.IntegerField(
-        verbose_name='Дата рождения'
+        verbose_name='Дата рождения',
+        validators=[MinValueValidator(
+            0, message='Возраст не может быть меньше 0'
+        ), MaxValueValidator(
+            38, message=f'Врятли котики столько живут,'
+                        f'если это правда - то обратитесь в книгу рекордов Гиннеса!'
+        )]
     )
     color = models.CharField(
         max_length=16,

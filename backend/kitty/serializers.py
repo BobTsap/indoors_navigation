@@ -1,12 +1,11 @@
 import base64
 import datetime as dt
+from better_profanity import profanity
 
 from django.core.files.base import ContentFile
 from rest_framework import serializers
 
 from kitty.models import Kitty
-# from message.models import Chat, Message
-
 
 
 class Base64ImageField(serializers.ImageField):
@@ -31,7 +30,11 @@ class KittySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Kitty
-        fields = '__all__'
+        fields = [
+            'name', 'age', 'color',
+            'breed', 'owner', 'history',
+            'image', 'image_url'
+        ]
 
     def get_image_url(self, obj):
         if obj.image:
@@ -52,5 +55,17 @@ class KittySerializer(serializers.ModelSerializer):
             'birth_year', instance.birth_year
         )
         instance.image = validated_data.get('image', instance.image)
+        if not instance.name:
+            raise serializers.ValidationError("Имя отсутствует")
+        if not instance.color:
+            raise serializers.ValidationError("Отсутствует окрас")
+        if not instance.birth_year:
+            raise serializers.ValidationError("Не указан год рождения")
+        if not instance.image:
+            raise serializers.ValidationError("Без фотографии не интересно")
         instance.save()
         return instance
+    
+    def validate_history(self, value):
+        value = profanity.censor(value)
+        return value

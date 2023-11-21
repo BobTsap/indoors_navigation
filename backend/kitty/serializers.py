@@ -9,6 +9,9 @@ from kitty.models import Kitty
 
 
 class Base64ImageField(serializers.ImageField):
+    '''
+    Converts image data in base64 format to ContentFile.
+    '''
     def to_internal_value(self, data):
         if isinstance(data, str) and data.startswith('data:image'):
             format, imgstr = data.split(';base64,')
@@ -20,7 +23,9 @@ class Base64ImageField(serializers.ImageField):
 
 
 class KittySerializer(serializers.ModelSerializer):
-
+    '''
+    Serializer for Kitty model.
+    '''
     age = serializers.SerializerMethodField()
     image = Base64ImageField(required=False, allow_null=True)
     image_url = serializers.SerializerMethodField(
@@ -37,18 +42,38 @@ class KittySerializer(serializers.ModelSerializer):
         ]
 
     def get_image_url(self, obj):
+        '''
+        Retrieves the URL of the image, if it exists.
+        Return URL of the image, if it exists.
+        Otherwise, None.
+        '''
         if obj.image:
             return obj.image.url
         return None
 
     def get_age(self, obj):
+        '''
+        Calculates the age of the cat based on the year of birth.
+        Return the ae of the Kitty.
+        '''
         return dt.datetime.now().year - obj.birth_year
 
     def create(self, validated_data):
+        '''
+        Creates a new cat based on validated data.
+        Return new Kitty object.
+        '''
         cat = Kitty.objects.create(**validated_data)
         return cat
 
     def update(self, instance, validated_data):
+        '''
+        Updates the data of an existing cat based on validated data.
+        Return updated Kitty object.
+        '''
+        if instance.owner != self.context['request'].user:
+            raise serializers.ValidationError(
+                'Вы не являетесь владельцем этого котика')
         instance.name = validated_data.get('name', instance.name)
         instance.color = validated_data.get('color', instance.color)
         instance.birth_year = validated_data.get(
@@ -65,7 +90,10 @@ class KittySerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Без фотографии не интересно")
         instance.save()
         return instance
-    
+
     def validate_history(self, value):
+        '''
+        Filters profanity in the history of the cat.
+        '''
         value = profanity.censor(value)
         return value

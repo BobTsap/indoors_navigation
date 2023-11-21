@@ -7,8 +7,9 @@ User = get_user_model()
 
 
 class Kitty(models.Model):
-    '''A class that collect information about cats.'''
-    
+    '''
+    A model that collect information about cats.
+    '''
     name = models.CharField(
         max_length=100,
         verbose_name='Имя котика',

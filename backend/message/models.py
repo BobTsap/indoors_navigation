@@ -7,6 +7,9 @@ User = get_user_model()
 
 
 class Chat(models.Model):
+    '''
+    A model that contains information about existing chats.
+    '''
     from_user = models.ForeignKey(
         User,
         verbose_name='Отправитель',
@@ -27,6 +30,9 @@ class Chat(models.Model):
 
 
 class Message(models.Model):
+    '''
+    A model for storing information about chat messages.
+    '''
     text = models.TextField(
         verbose_name='Текст сообщения',
     )

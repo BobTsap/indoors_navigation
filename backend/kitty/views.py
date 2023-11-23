@@ -18,8 +18,7 @@ class KittyViewSet(viewsets.ModelViewSet):
         '''
         The queryset of Kitties owned by the current user.
         '''
-        queryset = get_object_or_404(Kitty, owner=self.request.user)
-        return queryset
+        return Kitty.objects.filter(owner=self.request.user)
     
     def get_object(self):
         '''

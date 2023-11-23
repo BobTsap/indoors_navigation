@@ -87,6 +87,8 @@ class KittySerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Отсутствует окрас")
         if not instance.birth_year:
             raise serializers.ValidationError("Не указан год рождения")
+        if not instance.image:
+            raise serializers.ValidationError("Без фотографии не интересно")
         instance.save()
         return instance
 

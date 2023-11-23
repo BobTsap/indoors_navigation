@@ -38,6 +38,7 @@ class KittySerializer(serializers.ModelSerializer):
         fields = [
             'name', 'age', 'color',
             'breed', 'owner', 'history',
+            'birth_year',
             'image', 'image_url'
         ]
 
@@ -63,8 +64,18 @@ class KittySerializer(serializers.ModelSerializer):
         Creates a new cat based on validated data.
         Return new Kitty object.
         '''
+
+        # validated_data['birth_year'] = dt.datetime.now().year - int(validated_data.get('age'))
         cat = Kitty.objects.create(**validated_data)
         return cat
+        # birth_year = validated_data.pop('birth_year')
+        # kitty = Kitty.objects.create(
+        #     birth_year=birth_year,  # Устанавливаем год рождения котика
+        #     **validated_data  # Остальные данные
+        # )
+        # return kitty
+        # cat = Kitty.objects.create(**validated_data)
+        # return cat
 
     def update(self, instance, validated_data):
         '''

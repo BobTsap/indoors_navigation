@@ -1,3 +1,4 @@
+import datetime as dt
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from django.contrib.auth import get_user_model
@@ -17,10 +18,10 @@ class Kitty(models.Model):
     birth_year = models.IntegerField(
         verbose_name='Дата рождения',
         validators=[MinValueValidator(
-            0, message='Возраст не может быть меньше 0'
-        ), MaxValueValidator(
-            38, message=f'Врятли котики столько живут,'
+            1985, message=f'Врятли котики столько живут,'
                         f'если это правда - то обратитесь в книгу рекордов Гиннеса!'
+        ), MaxValueValidator(
+            dt.datetime.now().year, message=f'Возраст не может быть меньше 0'
         )]
     )
     color = models.CharField(

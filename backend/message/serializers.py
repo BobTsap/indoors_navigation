@@ -17,6 +17,15 @@ class MessageSerializer(serializers.ModelSerializer):
         value = profanity.censor(value)
         return value
     
+    def to_representation(self, instance):
+        '''
+        Customize the representation of a Chat instance.
+        Return username instead id.
+        '''
+        representation = super().to_representation(instance)
+        representation['sender'] = instance.sender.username
+        return representation
+    
     class Meta:
         model = Message
         fields = '__all__'

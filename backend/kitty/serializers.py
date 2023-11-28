@@ -81,6 +81,8 @@ class KittySerializer(serializers.ModelSerializer):
             'birth_year', instance.birth_year
         )
         instance.image = validated_data.get('image', instance.image)
+        instance.breed = validated_data.get('breed', instance.breed)
+        instance.history = validated_data.get('history', instance.history)
         if not instance.name:
             raise serializers.ValidationError("Имя отсутствует")
         if not instance.color:

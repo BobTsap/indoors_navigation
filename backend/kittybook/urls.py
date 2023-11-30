@@ -1,4 +1,4 @@
-from kitty.views import KittyViewSet
+from kitty.views import KittyViewSet, UserList
 from message.views import ChatMessagesView
 from message import views
 from django.conf import settings
@@ -29,6 +29,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/users/', UserList.as_view(), name='user-list'),
     path('api/conversations/start/', views.start_convo, name='start_convo'),
     path('api/conversations/<int:convo_id>/', views.get_conversation, name='get_conversation'),
     path('api/conversations/', views.conversations, name='conversations'),

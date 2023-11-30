@@ -1,9 +1,11 @@
+from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
+from rest_framework import generics, viewsets
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Kitty
-from .serializers import KittySerializer
+from .serializers import KittySerializer, UserSerializer
 
 
 class KittyViewSet(viewsets.ModelViewSet):
@@ -33,3 +35,11 @@ class KittyViewSet(viewsets.ModelViewSet):
         Saves a new Kitty object with the current user as the owner.
         '''
         serializer.save(owner=self.request.user)
+
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+

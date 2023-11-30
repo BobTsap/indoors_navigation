@@ -1,12 +1,17 @@
 import base64
 import datetime as dt
 from better_profanity import profanity
-
+from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from rest_framework import serializers
 
 from kitty.models import Kitty
 
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name']
 
 class Base64ImageField(serializers.ImageField):
     '''

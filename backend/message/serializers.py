@@ -29,7 +29,6 @@ class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ['id', 'text', 'pub_date', 'sender', 'chat_room']
-        # fields = '__all__'
 
 
 class ChatListSerializer(serializers.ModelSerializer):
